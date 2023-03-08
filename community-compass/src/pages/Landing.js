@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import SearchBar from "./searchBar";
 
 function LandingPage() {
   const [search, setSearch] = useState("");
@@ -8,27 +9,17 @@ function LandingPage() {
 
   const handleSearch = async () => {
     try {
-      const response = await fetch(`$/search?q=${search}`);
+      const response = await fetch(
+        `https://source.unsplash.com/1600x900/?${search}`
+      );
       if (!response.ok) {
         throw new Error("Oops! Something that wasn't supposed to happen happened!");
       }
-      //const results = await response.json();
       setSearchResult(response.url);
-      console.log(response);
       setSearched(true);
       setSearch("");
     } catch (error) {
       setError(error.message);
-    } return [search];
-  };
-
-  const handleInputChange = (event) => {
-    setSearch(event.target.value);
-  };
-
-  const handleInputKeyDown = (event) => {
-    if (event.key === "Enter") {
-      handleSearch();
     }
   };
 
@@ -40,8 +31,7 @@ function LandingPage() {
       </header>
       <main className="main">
         <div className="search">
-          <input type="text" value={search} onChange={handleInputChange} onKeyDown={handleInputKeyDown} placeholder="Search for an address" />
-          <button className="cool-button" onClick={handleSearch}>Search</button>
+        <SearchBar onClick={handleSearch} />
         </div>
         <div className="search-result" style={{ justifyContent: 'center', alignItems: 'center' }}>
           {!searched && (

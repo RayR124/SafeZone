@@ -1,6 +1,7 @@
 const { AuthenticationError } = require('apollo-server-express');
 const { User } = require('../models');
 const { signToken } = require('../utils/auth');
+const axios = require ('axios');
 
 const resolvers = {
     Query: {
@@ -8,36 +9,28 @@ const resolvers = {
             return User.find();
         },
     //    apiSearch: async () => {
-            // fetch rewuest
+            // fetch request
 
             // return data
     //    }
     },
     
     Mutation: {
-        addUser: async (parent, { username, email, password }) => {
-          const user = await User.create({ username, email, password });
-          const token = signToken(user);
-          return { token, user };
-        },
-        login: async (parent, { email, password }) => {
-          const user = await User.findOne({ email });
+      getLatLong: async (parent, args, ) => {
+          const { address } = args;
+          const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+          const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`;
     
-          if (!user) {
-            throw new AuthenticationError('No user found with this email address');
-          }
-    
-          const correctPw = await user.isCorrectPassword(password);
-    
-          if (!correctPw) {
-            throw new AuthenticationError('Incorrect credentials');
-          }
-    
-          const token = signToken(user);
-    
-          return { token, user };
-        },
-    },
+          const response = await axios(url);
+          console.log("response data", response.data);
+          const location = response.data.results[0].geometry.location;
+          return {
+            lat: location.lat,
+            lng: location.lng
+            //next api
+          };
+        }
+  }
 };
 
 module.exports = resolvers;
