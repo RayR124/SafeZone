@@ -7,6 +7,7 @@ const GET_LAT_LONG_MUTATION = gql`
     getLatLong(address: $address) {
       lat
       lng
+      business
     }
   }
 `;

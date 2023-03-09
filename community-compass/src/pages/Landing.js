@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import SearchBar from "./searchBar";
+import Auth from '../utils/auth';
+import { Link } from 'react-router-dom';
 
 function LandingPage() {
+
+  const logout = (event) => {
+    event.preventDefault();
+    Auth.logout();
+  };
+
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState("");
   const [searched, setSearched] = useState(false);
@@ -31,7 +39,7 @@ function LandingPage() {
       </header>
       <main className="main">
         <div className="search">
-        <SearchBar onClick={handleSearch} />
+          <SearchBar onSearch={handleSearch} />
         </div>
         <div className="search-result" style={{ justifyContent: 'center', alignItems: 'center' }}>
           {!searched && (
@@ -46,7 +54,24 @@ function LandingPage() {
             </div>
           </div>
         )}
+        {Auth.loggedIn() ? (
+          <>
+              <button className="cool-button" style={{ display: "none" }} onClick={logout}>
+                Logout
+              </button>
+              <Link className="cool-button" style={{ display: "none", position :"fixed", bottom: 0, left: 0 }} to="/membership">
+                Upgrage Membership
+              </Link>
+          </>
+        ) : (
+          <>
+                <button className="cool-button" style={{ display: "none" }} onClick={logout}>
+                Notworking
+              </button>
+          </>
+        )}
         {error && <div className="error">{error}</div>}
+
       </main>
       {searched && (
         <div className="crimeGrade" style={{ marginTop: 300, borderRadius: "25px", width: "400px", height: "100px", backgroundColor: "rgba(0, 0, 0, 0.5)", display: "flex", justifyContent: "center", alignItems: "center", fontWeight: "bold" }} >
@@ -69,6 +94,8 @@ function LandingPage() {
         </div>
       )}
     </div>
+
+
   );
 }
 
