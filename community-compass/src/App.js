@@ -41,7 +41,11 @@ function App() {
   const [landingVisible, setLandingVisible] = useState(true);
   const [contactUsVisible, setContactUsVisible] = useState(false);
   const [membershipVisible, setMembershipVisible] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // function handleLogin() {
+  //   setIsLoggedIn(true);
+  // }
 
   const logout = (event) => {
     event.preventDefault();
@@ -112,20 +116,16 @@ function App() {
           {!isLoggedIn ? (
             <div className="buttons" style={{ position: "fixed", top: 0, right: 0 }}>
               <button style={{ backgroundColor: "rgb(12, 123, 198)", fontWeight: 500 }} className="cool-button" onClick={toggleSignup}>Signup</button>
-              <button style={{ color: "rgb(12, 123, 198)", backgroundColor: "white", fontWeight: 700 }} className="cool-button" onClick={toggleLogin}>Login</button>
+              <button style={{ color: "rgb(12, 123, 198)", backgroundColor: "white", fontWeight: 700 }} className="cool-button" onClick={toggleLogin} >Login</button>
+              <button style={{ color: "rgb(12, 123, 198)", backgroundColor: "white", fontWeight: 700 }} className="cool-button" onClick={logout}>Logout</button>
             </div>
-          ) : (
-            <div style={{ position: "absolute", top: 0, right: 0 }}>
-              {isLoggedIn && (
-                <button style={{ color: "rgb(12, 123, 198)", backgroundColor: "white", fontWeight: 700 }} className="cool-button" onClick={logout}>Logout</button>
-              )}
-            </div>
-          )}
+          ) : (null)
+          }
           <div className="buttons" style={{ position: "absolute", top: 30, right: 10 }}>
             {Auth.loggedIn() ? (
               <>
-                <p>{Auth.getProfile().data.username} is currently logged In</p>
-              </>) : (<><p>You are not logged In</p></>
+                <p style={{ color: "white" }}>{Auth.getProfile().data.username} is currently logged In.</p>
+              </>) : (<><p style={{ color: "white" }}>You are not logged In</p></>
             )}
           </div>
           <div className={`Login ${showLogin ? "" : "hidden"}`}>

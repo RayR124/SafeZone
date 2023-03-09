@@ -15,11 +15,23 @@ const ContactForm = () => {
     setFormState({ ...formState, [name]: value });
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
+    const response = await fetch('api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formState),
+    });
+  
+    const responseData = await response.json();
+  
+    if (response.ok) {
+      setSuccessMessage("Thank you for your message! We will get back to you soon.");
+    } else {
+      console.error(responseData.error);
+    }
     setFormState({ name: "", email: "", message: "" });
-    setSuccessMessage("Thank you for your message! We will get back to you soon.");
   };
 
   return (

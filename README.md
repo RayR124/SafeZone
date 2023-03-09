@@ -26,7 +26,7 @@
 
 Upon searching for a house, the app will return a plethora of information for the user. Information such as the neighborhood's specific crime rating, the school zone the house is in and the ratings of the schools in that district. As well as local amenities and public recreational areas in the immediate vicinity of the house.
 
-![mmscreenshot](./[directory_here])
+![mmscreenshot](./community-compass/src/assets/SZ_Screenshot.png)
 
 ## Credits
 

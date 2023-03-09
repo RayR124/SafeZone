@@ -2,6 +2,9 @@ const express = require("express");
 const { ApolloServer } = require('apollo-server-express');
 const path = require('path');
 const { authMiddleware } = require('./utils/auth');
+const bodyParser = require('body-parser');
+const { check, validationResult } = require('express-validator');
+const fs = require('fs');
 
 const { typeDefs, resolvers } = require('./schemas');
 require('dotenv').config();
@@ -17,6 +20,31 @@ const server = new ApolloServer({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+app.post('/api/contact', [
+  check('name').notEmpty(),
+  check('email').isEmail(),
+  check('message').notEmpty(),
+], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: 'Invalid form data' });
+  }
+
+  const { name, email, message } = req.body;
+
+  // Save the form data to a file
+  const data = `${name}, ${email}, ${message}\n`;
+  fs.writeFile('./data/messages.json', data, (err) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Failed to save message' });
+    } else {
+      res.json({ message: 'Message saved' });
+    }
+  });
+});
 
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../community-compass/build')));
@@ -39,15 +67,15 @@ const startApolloServer = async (typeDefs, resolvers) => {
 };
 
 //Stripe
-const stripe = require('stripe')('sk_test_51Mgh8NGGno84ND8L78IKd03OnvFmjQyoMCj4p3v0MPWOyKMy99wM9CU4HMzZYhGCrISbTVxSGuc7Zb9hnArIl9cc00ct3Tb9VX');
-const YOUR_DOMAIN = 'http://localhost:3000';
-const price_id = 'price_1MiVhgGGno84ND8Lt0DEwfqQ'
+// const stripe = require('stripe')('sk_test_51Mgh8NGGno84ND8L78IKd03OnvFmjQyoMCj4p3v0MPWOyKMy99wM9CU4HMzZYhGCrISbTVxSGuc7Zb9hnArIl9cc00ct3Tb9VX');
+// const YOUR_DOMAIN = 'https://safezone.herokuapp.com/';
+// const price_id = 'price_1MiVhgGGno84ND8Lt0DEwfqQ';
 
-app.get("/checkout-session", async (req, res) => {
-  const { sessionId } = req.query;
-  const session = await stripe.checkout.sessions.retrieve(sessionId);
-  res.send(session);
-});
+// app.get("/checkout-session", async (req, res) => {
+//   const { sessionId } = req.query;
+//   const session = await stripe.checkout.sessions.retrieve(sessionId);
+//   res.send(session);
+// });
 
 // try {
 //   const session = await stripe.checkout.sessions.create({

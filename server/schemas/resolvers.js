@@ -12,10 +12,10 @@ const resolvers = {
         getLatLong: async (parent, args,) => {
             const { address } = args;
             const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
-            const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}`;
+            const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}&sensor=false`;
 
             const googleResponse = await axios(url);
-            console.log("response data", googleResponse.data.results);
+            console.log("response data", googleResponse.data);
             const location = googleResponse.data.results[0].geometry.location;
             const { lat, lng } = location;
             console.log("location", location);
