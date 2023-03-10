@@ -1,6 +1,7 @@
 const { User } = require('../models');
 const axios = require('axios');
 const { signToken } = require('../utils/auth');
+require("dotenv").config();
 
 const resolvers = {
     Query: {
@@ -13,9 +14,9 @@ const resolvers = {
             const { address } = args;
             const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
             const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${API_KEY}&sensor=false`;
-
+console.log(process.env);
             const googleResponse = await axios(url);
-            console.log("response data", googleResponse.data);
+            console.log("response data", url, googleResponse.data);
             const location = googleResponse.data.results[0].geometry.location;
             const { lat, lng } = location;
             console.log("location", location);
